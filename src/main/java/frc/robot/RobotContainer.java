@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -68,6 +69,8 @@ public class RobotContainer {
 
     // Configure the trigger bindings
     configureBindings();
+
+    DriverStation.reportWarning("Initalization complete", false);
   }
 
   public void initDefaultCommands() {

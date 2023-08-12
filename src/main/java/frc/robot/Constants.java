@@ -55,7 +55,7 @@ public final class Constants {
     public static final double kIntegratedTurningTicksPer100MsToRadPerSec = kIntegratedTurningTicksToRad * 10;
 
     public static final double kDriveMotorDeadband = 0.02;
-    public static final double kTurnMotorDeadband = 0.05;
+    public static final double kTurnMotorDeadband = 0.001;
 
     public static final double kPTurning = 0.55; // 0.6
     public static final double kITurning = 0;
