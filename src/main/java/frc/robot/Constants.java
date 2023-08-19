@@ -177,15 +177,15 @@ public final class Constants {
     public static final double kTurnToAnglePositionToleranceAngle = 5;
     public static final double kTurnToAngleVelocityToleranceAnglesPerSec = 2;
 
-    public static final double kPXController = SmartDashboard.getNumber("kP X Speed", 0.25);
-    public static final double kIXController = SmartDashboard.getNumber("kI X Speed", 0);
-    public static final double kDXController = SmartDashboard.getNumber("kD X Speed", 0);
-    public static final double kPYController = SmartDashboard.getNumber("kP Y Speed", 0.25);
-    public static final double kIYController = SmartDashboard.getNumber("kI Y Speed", 0);
-    public static final double kDYController = SmartDashboard.getNumber("kD Y Speed", 0);
-    public static final double kPThetaController = SmartDashboard.getNumber("kP Theta Auto", 3.0);
-    public static final double kIThetaController = SmartDashboard.getNumber("kI Theta Auto", 0);
-    public static final double kDThetaController = SmartDashboard.getNumber("kD Theta Auto", 0);
+    // public static final double kPXController = new PrefDouble("kPXSpeed", 0.5).get();
+    // public static final double kIXController = new PrefDouble("kIXSpeed", 0).get();
+    // public static final double kDXController = new PrefDouble("kDXSpeed", 0).get();
+    // public static final double kPYController = new PrefDouble("kPYSpeed", 0.5).get();
+    // public static final double kIYController = new PrefDouble("kIYSpeed", 0).get();
+    // public static final double kDYController = new PrefDouble("kDYSpeed", 0).get();
+    // public static final double kPThetaController = new PrefDouble("kPThetaAuto", 6.0).get();
+    // public static final double kIThetaController = new PrefDouble("kIThetaAuto", 0).get();
+    // public static final double kDThetaController = new PrefDouble("kDThetaAuto", 0).get();
     
     public static final double kPBalancingInitial = 4.8;
     public static final double kPBalancing = 2.6; //2.7 worked once //2.37; // 0.4
@@ -199,18 +199,18 @@ public final class Constants {
   }
 
   public static final class PathPlannerConstants {
-    private static final double kPPMaxVelocity = 1;
-    private static final double kPPMaxAcceleration = 1;
+    private static final double kPPMaxVelocity = 3;
+    private static final double kPPMaxAcceleration = 3;
     public static final PathConstraints kPPPathConstraints = new PathConstraints(kPPMaxVelocity, kPPMaxAcceleration);
 
-    public static final double kPP_P = 0.25;
-    public static final double kPP_I = 0;
-    public static final double kPP_D = 0;
+    public static final double kPP_P = new PrefDouble("PP_kP", 0.25).get();
+    public static final double kPP_I = new PrefDouble("PP_kI", 0.0).get();
+    public static final double kPP_D = new PrefDouble("PP_kD", 0.0).get();
     public static final PIDConstants kPPTranslationPIDConstants = new PIDConstants(kPP_P, kPP_I, kPP_D);
 
-    public static final double kPP_ThetaP = 0.25;
-    public static final double kPP_ThetaI = 0;
-    public static final double kPP_ThetaD = 0;
+    public static final double kPP_ThetaP = new PrefDouble("PP_kThetaP", 0.25).get();
+    public static final double kPP_ThetaI = new PrefDouble("PP_kThetaI", 0).get();
+    public static final double kPP_ThetaD = new PrefDouble("PP_kThetaD", 0).get();
     public static final PIDConstants kPPRotationPIDConstants = new PIDConstants(kPP_ThetaP, kPP_ThetaI, kPP_ThetaD);
 
     public static final boolean kUseAllianceColor = true;
