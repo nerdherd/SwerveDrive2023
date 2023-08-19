@@ -13,6 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.util.preferences.PrefBool;
 import frc.robot.util.preferences.PrefDouble;
 
 /**
@@ -65,6 +66,8 @@ public final class Constants {
     public static final double kIDrive = 0;
     public static final double kDDrive = 0;
     public static final double kFDrive = 0.0469;
+
+    public static final PrefBool ktunePID = new PrefBool("TuneDrivePID", false);
   } 
 
   public static final class SwerveDriveConstants {
