@@ -68,6 +68,7 @@ public final class Constants {
     public static final double kFDrive = 0.0469;
 
     public static final PrefBool ktunePID = new PrefBool("TuneDrivePID", false);
+    public static final String kCANivoreName = "CANivore1";
   } 
 
   public static final class SwerveDriveConstants {
