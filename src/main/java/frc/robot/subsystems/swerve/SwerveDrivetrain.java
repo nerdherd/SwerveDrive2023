@@ -2,6 +2,7 @@ package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -199,9 +200,23 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
     }
 
     public void drive(double xSpeed, double ySpeed, double turnSpeed) {
+
+        final double LOOP_TIME_S = 0.02;
+        Pose2d futureRobotPose =
+            new Pose2d(
+                xSpeed * LOOP_TIME_S,
+                ySpeed * LOOP_TIME_S,
+                Rotation2d.fromRadians(turnSpeed * LOOP_TIME_S));
+        Twist2d twistForPose = GeometryUtils.log(futureRobotPose);
+        ChassisSpeeds updatedSpeeds =
+            new ChassisSpeeds(
+                twistForPose.dx / LOOP_TIME_S,
+                twistForPose.dy / LOOP_TIME_S,
+                twistForPose.dtheta / LOOP_TIME_S);
+
         setModuleStates(
             SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(
-                new ChassisSpeeds(xSpeed, ySpeed, turnSpeed)
+                updatedSpeeds
             )
         );
     }

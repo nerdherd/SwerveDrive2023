@@ -224,7 +224,10 @@ public class SwerveJoystickCommand extends CommandBase {
             moduleStates = kDriveKinematics.toSwerveModuleStates(chassisSpeeds, rotationCenter);
         } else {
             robotOrientedJoystickDirection = null;
-            moduleStates = kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+            // moduleStates = kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+            
+            swerveDrive.drive(filteredXSpeed, filteredYSpeed, filteredTurningSpeed);
+            return;
         }
 
         
