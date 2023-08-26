@@ -9,18 +9,21 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 import frc.robot.util.NerdyMath;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class PrimalPotatoMine {
 
     private Limelight limelight;
     private SwerveDrivetrain drivetrain;
 
-    private double goalArea;
-    private double goalTX;
-    private double goalYaw;
+    private double goalArea = 4.1;
+    private double goalTX = 0;
+    private double goalYaw = 0;
 
-    final PIDController PIDArea = new PIDController(0, 0, 0);
-    final PIDController PIDTX = new PIDController(0, 0, 0);
+    final PIDController PIDArea = new PIDController(0.75, 0, 0.02);
+    final PIDController PIDTX = new PIDController(0.05, 0, 0.008);
     final PIDController PIDYaw = new PIDController(0, 0, 0);
 
     public PrimalPotatoMine(SwerveDrivetrain drivetrain) {
@@ -28,6 +31,7 @@ public class PrimalPotatoMine {
         try {
             limelight = new Limelight("limelight-low");
             limelight.setLightState(Limelight.LightMode.OFF);
+            SmartDashboard.putString("LL Status", "Error Instantiating");
         } catch (Exception ex) {
             limelight = null;
         }
@@ -59,6 +63,7 @@ public class PrimalPotatoMine {
             chassisSpeeds = new ChassisSpeeds(0, 0, 0);
             SwerveModuleState[] moduleStates = SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
             drivetrain.setModuleStates(moduleStates);
+            SmartDashboard.putString("driveToTarget status", "no valid target");
         }
         else {
             double averageX = limelight.getArea_avg();
@@ -68,6 +73,7 @@ public class PrimalPotatoMine {
                 chassisSpeeds = new ChassisSpeeds(0, 0, 0);
                 SwerveModuleState[] moduleStates = SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
                 drivetrain.setModuleStates(moduleStates);
+                SmartDashboard.putString("driveToTarget status", "averageY and averageX conditions met");
                 return;
             }
 
@@ -80,12 +86,14 @@ public class PrimalPotatoMine {
                 chassisSpeeds = new ChassisSpeeds(0, 0, 0);
                 SwerveModuleState[] moduleStates = SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
                 drivetrain.setModuleStates(moduleStates);
+                SmartDashboard.putString("driveToTarget status", "xSpeed ySpeed in range conditions met");
                 return;
             }
             else {
                 chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed);
                 SwerveModuleState[] moduleStates = SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
                 drivetrain.setModuleStates(moduleStates);
+                SmartDashboard.putString("driveToTarget status", "chassisSpeeds in motion");
                 return;
             }
         }
