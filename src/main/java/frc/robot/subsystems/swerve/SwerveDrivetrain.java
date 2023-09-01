@@ -221,6 +221,11 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
     public void driveFieldOriented(double xSpeed, double ySpeed) {
         driveFieldOriented(xSpeed, ySpeed, 0);
     }
+    
+    public void setChassisSpeeds(ChassisSpeeds speeds) {
+        SwerveModuleState[] targetStates = SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
+        setModuleStates(targetStates);
+    }
 
 
     //****************************** SETTERS ******************************/

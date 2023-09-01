@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.PathPlannerAutos;
+import frc.robot.commands.SquareTest;
 import frc.robot.commands.SwerveJoystickCommand;
 import frc.robot.commands.SwerveJoystickCommand.DodgeDirection;
 import frc.robot.subsystems.Reportable.LOG_LEVEL;
@@ -121,9 +122,12 @@ public class RobotContainer {
     final String[] paths = {
       "TestPath", "ChargeAroundLEFT", "TaxiRIGHT", "TaxiLEFT", "TestSquare", "Test Line", "TestSquare3"
     };
+    
+    PathPlannerAutos.init(swerveDrive);
 
     for (String path : paths) {
       PathPlannerAutos.initPath(path);
+      PathPlannerAutos.initPathGroup(path);
     }
 
     autoChooser.addOption("Do Nothing", Commands::none);
@@ -134,6 +138,7 @@ public class RobotContainer {
     autoChooser.addOption("Path Planner TestSquare", () -> PathPlannerAutos.pathplannerAuto("TestSquare", swerveDrive));
     autoChooser.addOption("Path Planner Test3", () -> PathPlannerAutos.pathplannerAuto("Test Line", swerveDrive));
     autoChooser.addOption("Path Planner TestSquare3", () -> PathPlannerAutos.pathplannerAuto("TestSquare3", swerveDrive));
+    autoChooser.addOption("Path Planner TestSquare4", () -> new SquareTest(PathPlannerAutos.autoBuilder));
 
     ShuffleboardTab autosTab = Shuffleboard.getTab("Autos");
 
