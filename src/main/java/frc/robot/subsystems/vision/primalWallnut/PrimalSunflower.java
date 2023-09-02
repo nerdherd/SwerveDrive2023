@@ -13,15 +13,15 @@ import frc.robot.subsystems.vision.jurrasicMarsh.LimelightHelpers;
 public class PrimalSunflower {
     //filler positions, need to actually get right positions later
     private Double[][] gridPositions = {
-        {0.0, 1.0, 0.0},
-        {0.0, 2.0, 0.0},
-        {0.0, 3.0, 0.0},
-        {0.0, 4.0, 0.0},
-        {0.0, 5.0, 0.0},
-        {0.0, 6.0, 0.0},
-        {0.0, 7.0, 0.0},
-        {0.0, 8.0, 0.0},
-        {0.0, 9.0, 0.0}
+        {6.5, 1.1, 0.0},
+        {6.5, 0.4, 0.0},
+        {6.5, -0.15, 0.0},
+        {6.5, -0.7, 0.0},
+        {6.5, -1.25, 0.0},
+        {6.5, -1.8, 0.0},
+        {6.5, -2.35, 0.0},
+        {6.5, -2.95, 0.0},
+        {6.5, -3.55, 0.0}
     };
 
     private Limelight limelight;
