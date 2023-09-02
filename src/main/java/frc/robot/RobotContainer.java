@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -27,6 +28,7 @@ import frc.robot.subsystems.imu.NavX;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveDrivetrain.DRIVE_MODE;
 import frc.robot.subsystems.swerve.SwerveDrivetrain.SwerveModuleType;
+import frc.robot.subsystems.vision.primalWallnut.PrimalSunflower;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -42,6 +44,8 @@ public class RobotContainer {
   public Gyro imu = new NavX();
   // public Gyro imu = new Pigeon(60);
   public SwerveDrivetrain swerveDrive;
+
+  private PrimalSunflower ps = new PrimalSunflower("limelight-high", swerveDrive);
 
   private final CommandPS4Controller driverController = new CommandPS4Controller(
       ControllerConstants.kDriverControllerPort);
@@ -115,6 +119,8 @@ public class RobotContainer {
     // These button bindings are chosen for testing, and may be changed based on
     driverController.share().onTrue(Commands.runOnce(imu::zeroHeading));
     driverController.options().onTrue(Commands.runOnce(swerveDrive::resetEncoders));
+    driverController.R2().onTrue(Commands.runOnce(() -> ps.getClosestZombie()));
+    SmartDashboard.putData("get closest zombie" , Commands.runOnce(() -> ps.getClosestZombie()));
   }
 
   private void initAutoChoosers() {
