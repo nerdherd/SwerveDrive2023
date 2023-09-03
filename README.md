@@ -1,6 +1,7 @@
 # SwerveDrive2023
 
 FRC Team 687's Swerve Drive template code, based on its 2023 Charged Up competition code. 
+
 ## How to Use
 
 This program requires WPILib VSCode 2023 and FRC Game Tools 2023 to be installed.
@@ -13,6 +14,8 @@ Then use Driver Station to enable the robot.
 
 Please branch off from the `dev` branch for any changes, and then submit a PR when finished. 
 Changes will be merged into the main branch and tagged as a release every two weeks.
+
+Please use the `merge` branch to apply changes upstream to ChargedUp2023.
 
 ## 3rd Party Libraries
 
