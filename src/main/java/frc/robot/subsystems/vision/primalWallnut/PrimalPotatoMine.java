@@ -32,19 +32,26 @@ public class PrimalPotatoMine {
     public PrimalPotatoMine(SwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
         try {
-            limelight = new Limelight("limelight-low");
+            limelight = new Limelight("limelight-high");
             limelight.setLightState(Limelight.LightMode.OFF);
-            SmartDashboard.putString("LL Status", "Error Instantiating");
+            SmartDashboard.putString("LL Status", "Instantiated");
+
         } catch (Exception ex) {
             limelight = null;
+            SmartDashboard.putString("LL Status", "Error Instantiating");
         }
 
         limelight.setPipeline(2);
+        SmartDashboard.putNumber("Checkpoint 0", 0);
+
+
     }
     
 
     public CommandBase PickupGroundNoArm() {
+        SmartDashboard.putNumber("Checkpoint 1", 1);
         return Commands.race(
+            new RunCommand(() -> SmartDashboard.putNumber("Checkpoint 3", 1)),
             new RunCommand(() -> driveToTarget()),
             Commands.waitSeconds(2)
         );
@@ -52,11 +59,13 @@ public class PrimalPotatoMine {
 
 
     public void driveToTarget() {
+        SmartDashboard.putNumber("Checkpoint 2", 2);
         double xSpeed = 0;
         double ySpeed = 0;
         double rotationSpeed = 0;
         
         if(limelight == null) {
+            SmartDashboard.putString("return status", "return");
             return;
         }
 
@@ -69,6 +78,8 @@ public class PrimalPotatoMine {
             SmartDashboard.putString("driveToTarget status", "no valid target");
         }
         else {
+            SmartDashboard.putString("driveToTarget status", "has valid target");
+
             double averageX = limelight.getArea_avg();
             double averageY = limelight.getArea_avg();
 
@@ -82,6 +93,10 @@ public class PrimalPotatoMine {
 
             xSpeed = PIDArea.calculate(averageX, goalArea);
             ySpeed = PIDTX.calculate(averageY, goalTX);
+
+            SmartDashboard.putNumber("X-Speed", xSpeed);
+            SmartDashboard.putNumber("Y-Speed", ySpeed);
+
             rotationSpeed = PIDYaw.calculate(drivetrain.getImu().getHeading(), goalYaw);
 
             if(NerdyMath.inRange(xSpeed, -0.1, 0.1) &&
