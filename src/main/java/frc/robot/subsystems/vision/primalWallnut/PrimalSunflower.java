@@ -19,12 +19,15 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.PathPlannerAutos;
 import frc.robot.subsystems.Reportable;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.Reportable.LOG_LEVEL;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.subsystems.vision.Limelight.LightMode;
 import frc.robot.subsystems.vision.jurrasicMarsh.LimelightHelpers;
 
-public class PrimalSunflower implements Reportable{
+public class PrimalSunflower extends SubsystemBase{
     //filler positions, need to actually get right positions later
     private Double[][] gridPositions = {
         {6.5, 1.1, 0.0},
@@ -68,30 +71,32 @@ public class PrimalSunflower implements Reportable{
         try {
             limelight = new Limelight(limelightName);
             limelight.setLightState(LightMode.OFF);
-            limelight.setPipeline(4); // april tag
+            limelight.setPipeline(0); // april tag
         } catch (Exception e) {
             limelight = null;
             DriverStation.reportWarning("Error instantiating limelight with name " + limelightName + ": " + e.getMessage(), true);
         }
 
-        SmartDashboard.putNumber("Tx P", 0);       
-        SmartDashboard.putNumber("Tx I", 0);
-        SmartDashboard.putNumber("Tx D", 0);
+        // SmartDashboard.putNumber("Tx P", 0);       
+        // SmartDashboard.putNumber("Tx I", 0);
+        // SmartDashboard.putNumber("Tx D", 0);
 
-        SmartDashboard.putNumber("Ta P", 0);       
-        SmartDashboard.putNumber("Ta I", 0);
-        SmartDashboard.putNumber("Ta D", 0);
+        // SmartDashboard.putNumber("Ta P", 0);       
+        // SmartDashboard.putNumber("Ta I", 0);
+        // SmartDashboard.putNumber("Ta D", 0);
 
-        SmartDashboard.putNumber("Yaw P", 0);       
-        SmartDashboard.putNumber("Yaw I", 0);
-        SmartDashboard.putNumber("Yaw D", 0);
+        // SmartDashboard.putNumber("Yaw P", 0);       
+        // SmartDashboard.putNumber("Yaw I", 0);
+        // SmartDashboard.putNumber("Yaw D", 0);
     }
     
 
-    //get robot position if limelight has target else, return 0, 0, 0
+    //get robot position if limelight has target else, return 0, 0, 0 (https://docs.limelightvision.io/en/latest/coordinate_systems_fiducials.html#field-space)
     private Double[] generateSun() {
         Double[] yee = {0.0, 0.0, 0.0};
-        if(limelight == null) return yee;
+        if (limelight == null) {
+            return yee;
+        }
         Pose3d pos = new Pose3d();
         if(limelight.hasValidTarget()) {
             pos = LimelightHelpers.getBotPose3d(llname); // Replace w different met.
@@ -101,7 +106,7 @@ public class PrimalSunflower implements Reportable{
         return yee;
     }
 
-    //get closest grid node by comparing robot pos to each known grid node pos
+    // Return position of grid closest to the robot
     public Double[] getClosestZombie() {
         robotPos = generateSun();
         int gridNumber = 0;
@@ -113,7 +118,7 @@ public class PrimalSunflower implements Reportable{
                 gridNumber = i;
             }
         }
-        SmartDashboard.putNumber("Closest Grid:", gridNumber);
+
         return gridPositions[gridNumber];
     }
 
@@ -144,27 +149,49 @@ public class PrimalSunflower implements Reportable{
             );
     }
 
+    public double getClosestGridIndex() {
+        Double[] robotPos = generateSun();
+        int gridNumber = 0;
+        Double distance = Math.sqrt(Math.pow(gridPositions[0][1] - robotPos[1], 2) + Math.pow(gridPositions[0][0] - robotPos[0], 2)); // distance formula
+        for (int i = 0; i < gridPositions.length; i++) {
+            Double newDistance = Math.sqrt(Math.pow(gridPositions[i][1] - robotPos[1], 2) + Math.pow(gridPositions[i][0] - robotPos[0], 2)); // distance formula
+            if(newDistance < distance) {
+                distance = newDistance;
+                gridNumber = i;
+            }
+        }
 
-    @Override
-    public void reportToSmartDashboard(LOG_LEVEL priority) {
-        // TODO Auto-generated method stub
-        
+        return gridNumber;
     }
 
 
-    @Override
+    public void reportToSmartDashboard(LOG_LEVEL priority) {
+    }
+
     public void initShuffleboard(LOG_LEVEL level) {
         if (level == LOG_LEVEL.OFF)  {
             return;
         }
         ShuffleboardTab tab;
+
         switch (level) {
             case OFF:
                 break;
             case ALL:
-            tab = Shuffleboard.getTab("Vision");
-                tab.addString("Robot Position", () -> ("X: " + robotPos[0] + "Y: " + robotPos[1]));
-                default:
+                tab = Shuffleboard.getTab("Vision");
+                tab.addNumber("Vision Pose X", () -> generateSun()[0]);
+                tab.addNumber("Vision Pose Y", () -> generateSun()[1]);
+                tab.addNumber("Vision Pose Z", () -> generateSun()[2]);
+
+                tab.addNumber("Closest Grid X", () -> getClosestZombie()[0]);
+                tab.addNumber("Closest Grid Y", () -> getClosestZombie()[1]);
+                tab.addNumber("Closest Grid Z", () -> getClosestZombie()[2]);
+
+                tab.addNumber("Closest Grid ID", () -> getClosestGridIndex());
+            case MEDIUM:
+                
+            case MINIMAL:
+                
                 break;
         }
     }
