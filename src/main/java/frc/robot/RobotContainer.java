@@ -121,7 +121,7 @@ public class RobotContainer {
     // These button bindings are chosen for testing, and may be changed based on
     driverController.share().onTrue(Commands.runOnce(imu::zeroHeading));
     driverController.options().onTrue(Commands.runOnce(swerveDrive::resetEncoders));
-    // driverController.R2().onTrue(Commands.runOnce(() -> ps.getClosestZombie()));
+    driverController.R2().onTrue(Commands.runOnce(() -> ps.getClosestZombie()));
     // SmartDashboard.putData("get closest zombie" , Commands.runOnce(() -> ps.getClosestZombie()));
     driverController.R2().onTrue(spudow.PickupGroundNoArm());
   }
