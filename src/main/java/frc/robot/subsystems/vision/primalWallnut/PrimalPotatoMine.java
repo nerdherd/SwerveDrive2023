@@ -32,7 +32,7 @@ public class PrimalPotatoMine {
     public PrimalPotatoMine(SwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
         try {
-            limelight = new Limelight("limelight-high");
+            limelight = new Limelight("limelight-low");
             limelight.setLightState(Limelight.LightMode.OFF);
             SmartDashboard.putString("LL Status", "Instantiated");
 
@@ -41,25 +41,41 @@ public class PrimalPotatoMine {
             SmartDashboard.putString("LL Status", "Error Instantiating");
         }
 
-        limelight.setPipeline(2);
         SmartDashboard.putNumber("Checkpoint 0", 0);
 
+    }
+
+    public PrimalPotatoMine() {
+        try {
+            limelight = new Limelight("limelight-low");
+            limelight.setLightState(Limelight.LightMode.OFF);
+            SmartDashboard.putString("LL Status", "Instantiated");
+
+        } catch (Exception ex) {
+            limelight = null;
+            SmartDashboard.putString("LL Status", "Error Instantiating");
+        }
+
+        limelight.setPipeline(1);
+        SmartDashboard.putNumber("Checkpoint 0", 0);
 
     }
-    
 
     public CommandBase PickupGroundNoArm() {
-        SmartDashboard.putNumber("Checkpoint 1", 1);
-        return Commands.race(
-            new RunCommand(() -> SmartDashboard.putNumber("Checkpoint 3", 1)),
-            new RunCommand(() -> driveToTarget()),
-            Commands.waitSeconds(2)
-        );
+        return Commands.parallel(
+                Commands.runOnce(() -> limelight.setPipeline(2)),
+                Commands.race(
+                    new RunCommand(() -> driveToTarget()),
+                    Commands.waitSeconds(2)
+                )
+            );
+            
     }
 
 
     public void driveToTarget() {
-        SmartDashboard.putNumber("Checkpoint 2", 2);
+        SmartDashboard.putNumber("Checkpoint 1", 1);
+
         double xSpeed = 0;
         double ySpeed = 0;
         double rotationSpeed = 0;
@@ -69,12 +85,12 @@ public class PrimalPotatoMine {
             return;
         }
 
-        ChassisSpeeds chassisSpeeds;
+        // ChassisSpeeds chassisSpeeds;
         
         if(!limelight.hasValidTarget()) {
-            chassisSpeeds = new ChassisSpeeds(0, 0, 0);
-            SwerveModuleState[] moduleStates = SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
-            drivetrain.setModuleStates(moduleStates);
+            // chassisSpeeds = new ChassisSpeeds(0, 0, 0);
+            // SwerveModuleState[] moduleStates = SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+            // drivetrain.setModuleStates(moduleStates);
             SmartDashboard.putString("driveToTarget status", "no valid target");
         }
         else {
@@ -84,9 +100,9 @@ public class PrimalPotatoMine {
             double averageY = limelight.getArea_avg();
 
             if((NerdyMath.inRange(averageY, -2, 2)) && (averageX > 7)) {
-                chassisSpeeds = new ChassisSpeeds(0, 0, 0);
-                SwerveModuleState[] moduleStates = SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
-                drivetrain.setModuleStates(moduleStates);
+                // chassisSpeeds = new ChassisSpeeds(0, 0, 0);
+                // SwerveModuleState[] moduleStates = SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+                // drivetrain.setModuleStates(moduleStates);
                 SmartDashboard.putString("driveToTarget status", "averageY and averageX conditions met");
                 return;
             }
@@ -97,20 +113,20 @@ public class PrimalPotatoMine {
             SmartDashboard.putNumber("X-Speed", xSpeed);
             SmartDashboard.putNumber("Y-Speed", ySpeed);
 
-            rotationSpeed = PIDYaw.calculate(drivetrain.getImu().getHeading(), goalYaw);
+            // rotationSpeed = PIDYaw.calculate(drivetrain.getImu().getHeading(), goalYaw); // Uncomment this and others later
 
             if(NerdyMath.inRange(xSpeed, -0.1, 0.1) &&
             NerdyMath.inRange(ySpeed, -0.1, 0.1)) {
-                chassisSpeeds = new ChassisSpeeds(0, 0, 0);
-                SwerveModuleState[] moduleStates = SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
-                drivetrain.setModuleStates(moduleStates);
+                // chassisSpeeds = new ChassisSpeeds(0, 0, 0);
+                // SwerveModuleState[] moduleStates = SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+                // drivetrain.setModuleStates(moduleStates);
                 SmartDashboard.putString("driveToTarget status", "xSpeed ySpeed in range conditions met");
                 return;
             }
             else {
-                chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed);
-                SwerveModuleState[] moduleStates = SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
-                drivetrain.setModuleStates(moduleStates);
+                // chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed);
+                // SwerveModuleState[] moduleStates = SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+                // drivetrain.setModuleStates(moduleStates);
                 SmartDashboard.putString("driveToTarget status", "chassisSpeeds in motion");
                 return;
             }

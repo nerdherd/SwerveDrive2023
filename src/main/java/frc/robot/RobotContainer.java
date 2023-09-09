@@ -28,6 +28,7 @@ import frc.robot.subsystems.imu.NavX;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveDrivetrain.DRIVE_MODE;
 import frc.robot.subsystems.swerve.SwerveDrivetrain.SwerveModuleType;
+import frc.robot.subsystems.vision.primalWallnut.PrimalPotatoMine;
 import frc.robot.subsystems.vision.primalWallnut.PrimalSunflower;
 
 /**
@@ -46,6 +47,7 @@ public class RobotContainer {
   public SwerveDrivetrain swerveDrive;
 
   private PrimalSunflower ps = new PrimalSunflower("limelight-high", swerveDrive);
+  private PrimalPotatoMine spudow = new PrimalPotatoMine();
 
   private final CommandPS4Controller driverController = new CommandPS4Controller(
       ControllerConstants.kDriverControllerPort);
@@ -119,8 +121,9 @@ public class RobotContainer {
     // These button bindings are chosen for testing, and may be changed based on
     driverController.share().onTrue(Commands.runOnce(imu::zeroHeading));
     driverController.options().onTrue(Commands.runOnce(swerveDrive::resetEncoders));
-    driverController.R2().onTrue(Commands.runOnce(() -> ps.getClosestZombie()));
-    SmartDashboard.putData("get closest zombie" , Commands.runOnce(() -> ps.getClosestZombie()));
+    // driverController.R2().onTrue(Commands.runOnce(() -> ps.getClosestZombie()));
+    // SmartDashboard.putData("get closest zombie" , Commands.runOnce(() -> ps.getClosestZombie()));
+    driverController.R2().onTrue(spudow.PickupGroundNoArm());
   }
 
   private void initAutoChoosers() {
