@@ -128,9 +128,9 @@ public class PrimalSunflower implements Reportable{
         Double xDist = gridPos[0] - robotPos[0];
         Double offset = 0.1;
 
-        firstPoint = new PathPoint(new Translation2d(xDist - offset, 0.0), Rotation2d.fromDegrees(0));
-        secondPoint = new PathPoint(new Translation2d(0, yDist), Rotation2d.fromDegrees(0));
-        thirdPoint = new PathPoint(new Translation2d(offset, 0), Rotation2d.fromDegrees(0));
+        firstPoint = new PathPoint(new Translation2d(xDist - offset, robotPos[1]), Rotation2d.fromDegrees(0));
+        secondPoint = new PathPoint(new Translation2d(robotPos[0], yDist), Rotation2d.fromDegrees(0));
+        thirdPoint = new PathPoint(new Translation2d(offset, robotPos[1]), Rotation2d.fromDegrees(0));
         
         SmartDashboard.putString("ATag First Point Coords", "X: " + firstPoint.position.getX() + " Y: " + firstPoint.position.getY());
         SmartDashboard.putString("ATag Second Point Coords", "X: " + secondPoint.position.getX() + " Y: " + secondPoint.position.getY());
