@@ -110,8 +110,10 @@ public class PrimalSunflower extends SubsystemBase{
         return yee;
     }
 
-    // Return position of grid closest to the robot
-    public Double[] getClosestZombie() {
+    /**
+     * @return index of the closest grid to the robot
+     */
+    public int getClosestZombieLane() {
         robotPos = generateSun();
         int gridNumber = 0;
         Double distance = Math.sqrt(Math.pow(gridPositions[0][1] - robotPos[1], 2) + Math.pow(gridPositions[0][0] - robotPos[0], 2)); // distance formula
@@ -123,7 +125,14 @@ public class PrimalSunflower extends SubsystemBase{
             }
         }
 
-        return gridPositions[gridNumber];
+        return gridNumber;
+    }
+
+    /**
+     * @return position of the closest grid to the robot
+     */
+    public Double[] getClosestZombieTile() {
+        return gridPositions[getClosestZombieLane()];
     }
 
     /**
@@ -131,7 +140,7 @@ public class PrimalSunflower extends SubsystemBase{
      */
     public PathPlannerTrajectory usePlantFood() {
         robotPos = generateSun();
-        Double[] gridPos = getClosestZombie();
+        Double[] gridPos = getClosestZombieTile();
 
         Double yDist = gridPos[1] - robotPos[1];
         Double xDist = gridPos[0] - robotPos[0];
@@ -153,22 +162,6 @@ public class PrimalSunflower extends SubsystemBase{
             );
     }
 
-    public double getClosestGridIndex() {
-        Double[] robotPos = generateSun();
-        int gridNumber = 0;
-        Double distance = Math.sqrt(Math.pow(gridPositions[0][1] - robotPos[1], 2) + Math.pow(gridPositions[0][0] - robotPos[0], 2)); // distance formula
-        for (int i = 0; i < gridPositions.length; i++) {
-            Double newDistance = Math.sqrt(Math.pow(gridPositions[i][1] - robotPos[1], 2) + Math.pow(gridPositions[i][0] - robotPos[0], 2)); // distance formula
-            if(newDistance < distance) {
-                distance = newDistance;
-                gridNumber = i;
-            }
-        }
-
-        return gridNumber;
-    }
-
-
     public void reportToSmartDashboard(LOG_LEVEL priority) {
         if(limelightUser != null) limelightUser.reportToSmartDashboard();
     }
@@ -188,11 +181,11 @@ public class PrimalSunflower extends SubsystemBase{
                 tab.addNumber("Robot Pose Y", () -> generateSun()[1]);
                 tab.addNumber("Robot Pose Z", () -> generateSun()[2]);
 
-                tab.addNumber("Closest Grid X", () -> getClosestZombie()[0]);
-                tab.addNumber("Closest Grid Y", () -> getClosestZombie()[1]);
-                tab.addNumber("Closest Grid Z", () -> getClosestZombie()[2]);
+                tab.addNumber("Closest Grid X", () -> getClosestZombieTile()[0]);
+                tab.addNumber("Closest Grid Y", () -> getClosestZombieTile()[1]);
+                tab.addNumber("Closest Grid Z", () -> getClosestZombieTile()[2]);
 
-                tab.addNumber("Closest Grid ID", () -> getClosestGridIndex());
+                tab.addNumber("Closest Grid ID", () -> getClosestZombieLane());
                 tab.addBoolean("AprilTag Found", () -> limelight.hasValidTarget());
                 
                 tab.addNumber("Traj Point 1 Pose X", () -> firstPoint.position.getX());

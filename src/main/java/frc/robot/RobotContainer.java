@@ -124,7 +124,7 @@ public class RobotContainer {
     driverController.options().onTrue(Commands.runOnce(swerveDrive::resetEncoders));
 
     driverController.L2().onTrue(Commands.runOnce(() -> ps.usePlantFood()));
-    SmartDashboard.putData("Get Closest Grid" , Commands.runOnce(() -> ps.getClosestZombie()));
+    SmartDashboard.putData("Get Closest Grid" , Commands.runOnce(() -> ps.getClosestZombieTile()));
     // driverController.R2().onTrue(spudow.PickupGroundNoArm());
   }
 
