@@ -122,7 +122,7 @@ public class RobotContainer {
     driverController.share().onTrue(Commands.runOnce(imu::zeroHeading));
     driverController.options().onTrue(Commands.runOnce(swerveDrive::resetEncoders));
 
-    driverController.L2().onTrue(Commands.runOnce(() -> ps.getClosestZombie()));
+    driverController.L2().onTrue(Commands.runOnce(() -> ps.generateSun()));
     SmartDashboard.putData("Get Closest Grid" , Commands.runOnce(() -> ps.getClosestZombie()));
     driverController.R2().onTrue(spudow.PickupGroundNoArm());
   }

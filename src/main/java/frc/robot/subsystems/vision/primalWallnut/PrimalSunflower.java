@@ -92,7 +92,7 @@ public class PrimalSunflower extends SubsystemBase{
     
 
     //get robot position if limelight has target else, return 0, 0, 0 (https://docs.limelightvision.io/en/latest/coordinate_systems_fiducials.html#field-space)
-    private Double[] generateSun() {
+    public Double[] generateSun() {
         Double[] yee = {0.0, 0.0, 0.0};
         if (limelight == null) {
             return yee;
@@ -103,6 +103,7 @@ public class PrimalSunflower extends SubsystemBase{
             return new Double[]{pos.getX(), pos.getY(), pos.getZ()};
 
         }
+        SmartDashboard.putString("Robot Position", "X: " + pos.getX() + " Y: " + pos.getY());
         return yee;
     }
 
