@@ -65,13 +65,15 @@ public class PrimalSunflower extends SubsystemBase{
      * drivetrain = swerve drive 
     */
     public PrimalSunflower(String limelightName, SwerveDrivetrain drivetrain) {
-        this.drivetrain = drivetrain;
+        // this.drivetrain = drivetrain;   UNCOMMENR LATER
         this.llname = limelightName;
+        SmartDashboard.putString("Are we getting laid?", "no");
 
         try {
             limelight = new Limelight(limelightName);
             limelight.setLightState(LightMode.OFF);
-            limelight.setPipeline(0); // april tag
+
+            
         } catch (Exception e) {
             limelight = null;
             DriverStation.reportWarning("Error instantiating limelight with name " + limelightName + ": " + e.getMessage(), true);
@@ -97,13 +99,16 @@ public class PrimalSunflower extends SubsystemBase{
         if (limelight == null) {
             return yee;
         }
+        limelight.setPipeline(4);
+        
         Pose3d pos = new Pose3d();
         if(limelight.hasValidTarget()) {
             pos = LimelightHelpers.getBotPose3d(llname); // Replace w different met.
+            SmartDashboard.putString("Are we getting laid?", "yes");
+            SmartDashboard.putString("Robot Position", "X: " + pos.getX() + " Y: " + pos.getY());
             return new Double[]{pos.getX(), pos.getY(), pos.getZ()};
-
         }
-        SmartDashboard.putString("Robot Position", "X: " + pos.getX() + " Y: " + pos.getY());
+        
         return yee;
     }
 
