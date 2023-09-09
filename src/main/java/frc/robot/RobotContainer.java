@@ -46,7 +46,7 @@ public class RobotContainer {
   // public Gyro imu = new Pigeon(60);
   public SwerveDrivetrain swerveDrive;
 
-  private PrimalSunflower ps = new PrimalSunflower("limelight-high", swerveDrive);
+  private PrimalSunflower ps;
   // private PrimalPotatoMine spudow = new PrimalPotatoMine();
 
   private final CommandPS4Controller driverController = new CommandPS4Controller(
@@ -68,6 +68,7 @@ public class RobotContainer {
   public RobotContainer() {
     try {
       swerveDrive = new SwerveDrivetrain(imu, SwerveModuleType.CANCODER);
+      ps = new PrimalSunflower("limelight-high");
     } catch (IllegalArgumentException e) {
       DriverStation.reportError("Illegal Swerve Drive Module Type", e.getStackTrace());
     }
@@ -122,7 +123,7 @@ public class RobotContainer {
     driverController.share().onTrue(Commands.runOnce(imu::zeroHeading));
     driverController.options().onTrue(Commands.runOnce(swerveDrive::resetEncoders));
 
-    driverController.L2().onTrue(Commands.runOnce(() -> ps.getClosestZombie()));
+    driverController.L2().onTrue(Commands.runOnce(() -> ps.usePlantFood()));
     SmartDashboard.putData("Get Closest Grid" , Commands.runOnce(() -> ps.getClosestZombie()));
     // driverController.R2().onTrue(spudow.PickupGroundNoArm());
   }

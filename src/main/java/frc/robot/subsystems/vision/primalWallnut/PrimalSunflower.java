@@ -25,6 +25,7 @@ import frc.robot.subsystems.Reportable.LOG_LEVEL;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.subsystems.vision.Limelight.LightMode;
+import frc.robot.subsystems.vision.jurrasicMarsh.LimelightHelperUser;
 import frc.robot.subsystems.vision.jurrasicMarsh.LimelightHelpers;
 
 public class PrimalSunflower extends SubsystemBase{
@@ -45,38 +46,38 @@ public class PrimalSunflower extends SubsystemBase{
     private Double[] robotPos = {0.0, 0.0, 0.0};
 
     //points in the path to get to the closest grid
-    PathPoint firstPoint;
-    PathPoint secondPoint;
-    PathPoint thirdPoint;
+    PathPoint firstPoint = new PathPoint(new Translation2d(robotPos[0], robotPos[1]), Rotation2d.fromDegrees(0));
+    PathPoint secondPoint = new PathPoint(new Translation2d(1, robotPos[1]), Rotation2d.fromDegrees(0));
+    PathPoint thirdPoint = new PathPoint(new Translation2d(robotPos[0], robotPos[1]), Rotation2d.fromDegrees(0));
 
     private Limelight limelight;
+    private LimelightHelperUser limelightUser;
 
     private SwerveDrivetrain drivetrain;
 
     private PIDController PIDArea = new PIDController(0, 0, 0);
     private PIDController PIDTX = new PIDController(0, 0, 0);
     private PIDController PIDYaw = new PIDController(0, 0, 0);
-
-    private String llname;
     
     /*
      * Params:
      * limelightName = name of the limelight
      * drivetrain = swerve drive 
     */
-    public PrimalSunflower(String limelightName, SwerveDrivetrain drivetrain) {
+    public PrimalSunflower(String limelightName) {
         // this.drivetrain = drivetrain;   UNCOMMENR LATER
-        this.llname = limelightName;
-        SmartDashboard.putString("Are we getting laid?", "no");
-
+        SmartDashboard.putBoolean("LimelightHelper inited", true);
         try {
             limelight = new Limelight(limelightName);
             limelight.setLightState(LightMode.OFF);
-
+            limelight.setPipeline(4);
+            limelightUser = new LimelightHelperUser(limelightName);
             
         } catch (Exception e) {
             limelight = null;
-            DriverStation.reportWarning("Error instantiating limelight with name " + limelightName + ": " + e.getMessage(), true);
+            // DriverStation.reportWarning("Error instantiating limelight with name " + limelightName + ": " + e.getMessage(), true);
+            SmartDashboard.putBoolean("LimelightHelper inited", false);
+            limelightUser = null;
         }
 
         // SmartDashboard.putNumber("Tx P", 0);       
@@ -103,12 +104,9 @@ public class PrimalSunflower extends SubsystemBase{
         
         Pose3d pos = new Pose3d();
         if(limelight.hasValidTarget()) {
-            pos = LimelightHelpers.getBotPose3d(llname); // Replace w different met.
-            SmartDashboard.putString("Are we getting laid?", "yes");
-            SmartDashboard.putString("Robot Position", "X: " + pos.getX() + " Y: " + pos.getY());
+            pos = limelightUser.getPose3d(); // Replace w different met.
             return new Double[]{pos.getX(), pos.getY(), pos.getZ()};
         }
-        
         return yee;
     }
 
@@ -131,7 +129,7 @@ public class PrimalSunflower extends SubsystemBase{
     /**
      * @return PathPlannerTrajectory to get to the closest grid
      */
-    public PathPlannerTrajectory attackZombie() {
+    public PathPlannerTrajectory usePlantFood() {
         robotPos = generateSun();
         Double[] gridPos = getClosestZombie();
 
@@ -140,7 +138,7 @@ public class PrimalSunflower extends SubsystemBase{
         Double offset = 0.1;
 
         firstPoint = new PathPoint(new Translation2d(xDist - offset, robotPos[1]), Rotation2d.fromDegrees(0));
-        secondPoint = new PathPoint(new Translation2d(robotPos[0], yDist), Rotation2d.fromDegrees(0));
+        secondPoint = new PathPoint(new Translation2d(generateSun()[0], yDist), Rotation2d.fromDegrees(0));
         thirdPoint = new PathPoint(new Translation2d(offset, robotPos[1]), Rotation2d.fromDegrees(0));
         
         SmartDashboard.putString("ATag First Point Coords", "X: " + firstPoint.position.getX() + " Y: " + firstPoint.position.getY());
@@ -172,6 +170,7 @@ public class PrimalSunflower extends SubsystemBase{
 
 
     public void reportToSmartDashboard(LOG_LEVEL priority) {
+        if(limelightUser != null) limelightUser.reportToSmartDashboard();
     }
 
     public void initShuffleboard(LOG_LEVEL level) {
@@ -185,15 +184,26 @@ public class PrimalSunflower extends SubsystemBase{
                 break;
             case ALL:
                 tab = Shuffleboard.getTab("Vision");
-                tab.addNumber("Vision Pose X", () -> generateSun()[0]);
-                tab.addNumber("Vision Pose Y", () -> generateSun()[1]);
-                tab.addNumber("Vision Pose Z", () -> generateSun()[2]);
+                tab.addNumber("Robot Pose X", () -> generateSun()[0]);
+                tab.addNumber("Robot Pose Y", () -> generateSun()[1]);
+                tab.addNumber("Robot Pose Z", () -> generateSun()[2]);
 
                 tab.addNumber("Closest Grid X", () -> getClosestZombie()[0]);
                 tab.addNumber("Closest Grid Y", () -> getClosestZombie()[1]);
                 tab.addNumber("Closest Grid Z", () -> getClosestZombie()[2]);
 
                 tab.addNumber("Closest Grid ID", () -> getClosestGridIndex());
+                tab.addBoolean("AprilTag Found", () -> limelight.hasValidTarget());
+                
+                tab.addNumber("Traj Point 1 Pose X", () -> firstPoint.position.getX());
+                tab.addNumber("Traj Point 1 Pose Y", () -> firstPoint.position.getY());
+
+                tab.addNumber("Traj Point 2 Pose X", () -> secondPoint.position.getX());
+                tab.addNumber("Traj Point 2 Pose Y", () -> secondPoint.position.getY());
+
+                tab.addNumber("Traj Point 3 Pose X", () -> thirdPoint.position.getX());
+                tab.addNumber("Traj Point 3 Pose Y", () -> thirdPoint.position.getY());
+
             case MEDIUM:
                 
             case MINIMAL:
