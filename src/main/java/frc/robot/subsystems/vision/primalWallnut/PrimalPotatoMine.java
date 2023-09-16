@@ -1,5 +1,8 @@
 package frc.robot.subsystems.vision.primalWallnut;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -24,6 +27,8 @@ public class PrimalPotatoMine {
     private double goalArea = 4.1;
     private double goalTX = 0;
     private double goalYaw = 0;
+
+    private TalonSRX flywheel = new TalonSRX(5);
 
     final PIDController PIDArea = new PIDController(0.75, 0, 0.02);
     final PIDController PIDTX = new PIDController(0.05, 0, 0.008);
@@ -56,7 +61,6 @@ public class PrimalPotatoMine {
             SmartDashboard.putString("LL Status", "Error Instantiating");
         }
 
-        limelight.setPipeline(1);
         SmartDashboard.putNumber("Checkpoint 0", 0);
 
     }
@@ -88,6 +92,7 @@ public class PrimalPotatoMine {
         // ChassisSpeeds chassisSpeeds;
         
         if(!limelight.hasValidTarget()) {
+            flywheel.set(ControlMode.PercentOutput, 0);
             // chassisSpeeds = new ChassisSpeeds(0, 0, 0);
             // SwerveModuleState[] moduleStates = SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
             // drivetrain.setModuleStates(moduleStates);
@@ -97,7 +102,7 @@ public class PrimalPotatoMine {
             SmartDashboard.putString("driveToTarget status", "has valid target");
 
             double averageX = limelight.getArea_avg();
-            double averageY = limelight.getArea_avg();
+            double averageY = limelight.getXAngle_avg();
 
             if((NerdyMath.inRange(averageY, -2, 2)) && (averageX > 7)) {
                 // chassisSpeeds = new ChassisSpeeds(0, 0, 0);

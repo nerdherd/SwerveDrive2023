@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -28,6 +29,7 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
 
     private final Gyro gyro;
     private final SwerveDriveOdometry odometer;
+    private SwerveDrivePoseEstimator poseEstimator;
     private DRIVE_MODE driveMode = DRIVE_MODE.FIELD_ORIENTED;
 
     private Field2d field;
