@@ -135,7 +135,7 @@ public class CANSwerveModule implements SwerveModule {
      * Reset the CANCoder's relative encoder using its absolute encoder
      */
     public void resetEncoder() {
-        double startAngle = ((canCoder.getAbsolutePosition().getValue() * 360) - this.CANCoderOffsetDegrees) % 1;
+        double startAngle = ((canCoder.getAbsolutePosition().getValue() * 360) - (this.CANCoderOffsetDegrees / 360)) % 1;
         canCoder.setPosition(startAngle);
 
         ModuleConstants.ktunePID.loadPreferences();
