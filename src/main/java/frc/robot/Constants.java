@@ -68,7 +68,7 @@ public final class Constants {
     public static final double kFDrive = 0.0469;
 
     public static final PrefBool ktunePID = new PrefBool("TuneDrivePID", false);
-    public static final String kCANivoreName = "CANivore1";
+    public static final String kCANivoreName = "CANivore2";
   } 
 
   public static final class SwerveDriveConstants {
@@ -123,10 +123,10 @@ public final class Constants {
       public static final int kBLCANCoderID = 34;
       public static final int kBRCANCoderID = 44;
 
-      public static final boolean kFRCANCoderReversed = false;    
-      public static final boolean kFLCANCoderReversed = false;      
-      public static final boolean kBLCANCoderReversed = false;       
-      public static final boolean kBRCANCoderReversed = false; 
+      public static final boolean kFRCANCoderReversed = true;    
+      public static final boolean kFLCANCoderReversed = true;      
+      public static final boolean kBLCANCoderReversed = true;       
+      public static final boolean kBRCANCoderReversed = true; 
 
       // public static final double kFRCANCoderOffsetDegrees = 25.75;       
       // public static final double kFLCANCoderOffsetDegrees = -53.174;         
