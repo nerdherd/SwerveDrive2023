@@ -7,10 +7,15 @@ package frc.robot;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.auto.PIDConstants;
 
+import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.util.preferences.PrefDouble;
@@ -74,6 +79,12 @@ public final class Constants {
     public static final double kTrackWidth = Units.inchesToMeters(21);
     // Distance between front and back wheels
     public static final double kWheelBase = Units.inchesToMeters(21);
+
+    public static final double kVisionSTDx = 0.9;
+    public static final double kVisionSTDy = 0.9;
+    public static final double kVisionSTDtheta = 69696969;
+    public static final Matrix<N3, N1> kBaseVisionPoseSTD = VecBuilder.fill(kVisionSTDx, kVisionSTDy, kVisionSTDtheta);
+
 
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
       new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -199,8 +210,8 @@ public final class Constants {
   }
 
   public static final class PathPlannerConstants {
-    private static final double kPPMaxVelocity = 3;
-    private static final double kPPMaxAcceleration = 3;
+    public static final double kPPMaxVelocity = 3;
+    public static final double kPPMaxAcceleration = 3;
     public static final PathConstraints kPPPathConstraints = new PathConstraints(kPPMaxVelocity, kPPMaxAcceleration);
 
     public static final double kPP_P = new PrefDouble("PP_kP", 0.25).get();
@@ -214,5 +225,14 @@ public final class Constants {
     public static final PIDConstants kPPRotationPIDConstants = new PIDConstants(kPP_ThetaP, kPP_ThetaI, kPP_ThetaD);
 
     public static final boolean kUseAllianceColor = true;
+  }
+
+  public static final class VisionConstants {
+    public static final String kLimelightBackName = "limelight-back";
+    public static final String kLimelightFrontName = "limelight-front";
+    public static final int kAprilTagPipeline = 4;
+    public static final double kSlidingOffset = 0.4; // Meters away from grid while robot is sliding.
+    public static final double fieldXOffset = 8; // Guess
+    public static final double fieldYOffset = 3.5; // Guess
   }
 }

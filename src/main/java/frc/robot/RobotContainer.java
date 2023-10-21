@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.PathPlannerAutos;
 import frc.robot.commands.SquareTest;
 import frc.robot.commands.SwerveJoystickCommand;
@@ -47,7 +48,6 @@ public class RobotContainer {
   public SwerveDrivetrain swerveDrive;
 
   //private PrimalSunflower ps;
-  private PrimalPotatoMine spudow = new PrimalPotatoMine();
 
   private final CommandPS4Controller driverController = new CommandPS4Controller(
       ControllerConstants.kDriverControllerPort);
@@ -62,13 +62,16 @@ public class RobotContainer {
 
   private SendableChooser<Supplier<CommandBase>> autoChooser = new SendableChooser<Supplier<CommandBase>>();
 
+  // private PrimalSunflower backSunflower = new PrimalSunflower(VisionConstants.kLimelightBackName);
+  private PrimalSunflower frontSunflower = new PrimalSunflower(VisionConstants.kLimelightFrontName);
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     try {
-      swerveDrive = new SwerveDrivetrain(imu, SwerveModuleType.CANCODER);
-      //ps = new PrimalSunflower("limelight-high");
+      // Pass in "sunflowers" in reverse order of priority (most important last)
+      swerveDrive = new SwerveDrivetrain(imu, SwerveModuleType.CANCODER, frontSunflower);
     } catch (IllegalArgumentException e) {
       DriverStation.reportError("Illegal Swerve Drive Module Type", e.getStackTrace());
     }
@@ -125,7 +128,6 @@ public class RobotContainer {
 
     //driverController.L2().onTrue(Commands.runOnce(() -> ps.usePlantFood()));
     //SmartDashboard.putData("Get Closest Grid" , Commands.runOnce(() -> ps.getClosestZombieTile()));
-    driverController.R2().onTrue(spudow.PickupGroundNoArm());
   }
 
   private void initAutoChoosers() {
