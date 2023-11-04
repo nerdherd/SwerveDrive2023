@@ -76,13 +76,15 @@ public class PrimalSunflower implements Reportable {
 
     private Field2d field;
 
+    private double taRequirement;
+
     /*
      * Params:
      * limelightName = name of the limelight
-     * drivetrain = swerve drive 
+     * taRequirement = the minimum ta in order for pose estimator to include vision measurement
     */
-    public PrimalSunflower(String limelightName) {
-        // this.drivetrain = drivetrain;   UNCOMMENR LATER
+    public PrimalSunflower(String limelightName, double taRequirement) {
+        this.taRequirement = taRequirement;
         llname = limelightName;
         try {
             SmartDashboard.putBoolean("LimelightHelper inited", true);
@@ -183,6 +185,14 @@ public class PrimalSunflower implements Reportable {
                 new PathPoint(new Translation2d(gridPos[0], gridPos[1]), Rotation2d.fromDegrees(180))
             )
         );
+    }
+
+    public double zombieOnYourLawn() {
+        return limelight.getArea();
+    }
+
+    public double getPlantFood() {
+        return taRequirement;
     }
 
     /**
